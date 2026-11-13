@@ -1,0 +1,165 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum VideoStatus {
+  QUEUED
+  DOWNLOADING
+  TRANSCRIBING
+  ANALYZING
+  RENDERING
+  READY
+  FAILED
+  CANCELLED
+}
+
+enum ClipStatus {
+  RENDERING
+  READY
+  REJECTED
+  APPROVED
+  PUBLISH_QUEUED
+  UPLOADING
+  PUBLISHED
+  PUBLISH_FAILED
+  RENDER_FAILED
+}
+
+enum SourceType {
+  youtube
+  upload
+}
+
+enum ErrorCategory {
+  USER_INPUT
+  EXTERNAL
+  SYSTEM
+}
+
+enum JobEventLevel {
+  info
+  warn
+  error
+}
+
+model Video {
+  id                String         @id @default(cuid())
+  sourceType        SourceType     @map("source_type")
+  sourceUrl         String?        @map("source_url")
+  sourceVideoId     String?        @map("source_video_id")
+  title             String?
+  durationSec       Int?           @map("duration_sec")
+  status            VideoStatus
+  progress          Int            @default(0)
+  stageDetail       String?        @map("stage_detail")
+  templateId        String         @map("template_id")
+  errorCode         String?        @map("error_code")
+  errorCategory     ErrorCategory? @map("error_category")
+  errorMessage      String?        @map("error_message")
+  originalKey       String?        @map("original_key")
+  audioKey          String?        @map("audio_key")
+  originalDeletedAt DateTime?      @map("original_deleted_at") @db.Timestamptz
+  createdAt         DateTime       @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt         DateTime       @updatedAt @map("updated_at") @db.Timestamptz
+
+  transcript Transcript?
+  clips      Clip[]
+  events     JobEvent[]
+
+  @@index([createdAt(sort: Desc)])
+  @@index([status])
+  @@map("videos")
+}
+
+model Transcript {
+  videoId  String @id @map("video_id")
+  language String?
+  data     Json
+
+  video Video @relation(fields: [videoId], references: [id], onDelete: Cascade)
+
+  @@map("transcripts")
+}
+
+model Clip {
+  id                  String     @id @default(cuid())
+  videoId             String     @map("video_id")
+  idx                 Int
+  startSec            Float      @map("start_sec")
+  endSec              Float      @map("end_sec")
+  heuristicScore      Float      @map("heuristic_score")
+  llmScore            Float?     @map("llm_score")
+  finalScore          Float      @map("final_score")
+  hookText            String?    @map("hook_text")
+  titleOptions        String[]   @default([]) @map("title_options")
+  ytTitle             String     @map("yt_title")
+  ytDescription       String     @map("yt_description")
+  ytTags              String[]   @default([]) @map("yt_tags")
+  ytPrivacy           String     @map("yt_privacy")
+  status              ClipStatus
+  videoKey            String?    @map("video_key")
+  thumbKey            String?    @map("thumb_key")
+  sizeBytes           BigInt?    @map("size_bytes")
+  ytVideoId           String?    @map("yt_video_id")
+  ytUploadSessionUrl  String?    @map("yt_upload_session_url")
+  ytThumbError        String?    @map("yt_thumb_error")
+  errorCode           String?    @map("error_code")
+  errorMessage        String?    @map("error_message")
+  expiresAt           DateTime?  @map("expires_at") @db.Timestamptz
+  publishAt           DateTime?  @map("publish_at") @db.Timestamptz
+  approvedAt          DateTime?  @map("approved_at") @db.Timestamptz
+  publishedAt         DateTime?  @map("published_at") @db.Timestamptz
+  createdAt           DateTime   @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt           DateTime   @updatedAt @map("updated_at") @db.Timestamptz
+
+  video  Video      @relation(fields: [videoId], references: [id], onDelete: Cascade)
+  events JobEvent[]
+
+  @@unique([videoId, idx])
+  @@index([videoId])
+  @@index([status])
+  @@index([expiresAt])
+  @@index([publishAt, status])
+  @@map("clips")
+}
+
+model YoutubeAccount {
+  id               Int       @id
+  channelId        String?   @map("channel_id")
+  channelTitle     String?   @map("channel_title")
+  refreshTokenEnc  String    @map("refresh_token_enc")
+  scopes           String
+  needsReconnect   Boolean   @default(false) @map("needs_reconnect")
+  connectedAt      DateTime? @map("connected_at") @db.Timestamptz
+
+  @@map("youtube_account")
+}
+
+model JobEvent {
+  id        BigInt        @id @default(autoincrement())
+  videoId   String        @map("video_id")
+  clipId    String?       @map("clip_id")
+  stage     String?
+  level     JobEventLevel
+  message   String
+  data      Json?
+  createdAt DateTime      @default(now()) @map("created_at") @db.Timestamptz
+
+  video Video @relation(fields: [videoId], references: [id], onDelete: Cascade)
+  clip  Clip? @relation(fields: [clipId], references: [id], onDelete: SetNull)
+
+  @@index([videoId, id])
+  @@map("job_events")
+}
+
+model Setting {
+  key   String @id
+  value Json
+
+  @@map("settings")
+}

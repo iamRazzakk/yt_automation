@@ -1,0 +1,27 @@
+{
+  "hookPatterns": [
+    "why",
+    "how",
+    "secret",
+    "mistake",
+    "never",
+    "stop",
+    "nobody",
+    "most people",
+    "biggest",
+    "shocking",
+    "truth",
+    "hack",
+    "avoid",
+    "warning"
+  ],
+  "stopwords": [
+    "the", "a", "an", "and", "or", "but", "in", "on", "at", "to", "for", "of",
+    "is", "are", "was", "were", "be", "been", "being", "have", "has", "had",
+    "do", "does", "did", "will", "would", "could", "should", "may", "might",
+    "this", "that", "these", "those", "it", "its", "you", "your", "i", "we",
+    "they", "them", "their", "he", "she", "his", "her", "with", "as", "from",
+    "by", "not", "no", "so", "if", "then", "than", "too", "very", "just",
+    "about", "into", "over", "after", "before", "between", "out", "up", "down"
+  ]
+}

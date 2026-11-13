@@ -1,0 +1,22 @@
+{
+  "name": "shorts-studio",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node scripts/dev.mjs",
+    "dev:api": "pnpm --filter @shorts-studio/backend dev:api",
+    "dev:worker": "pnpm --filter @shorts-studio/backend dev:worker",
+    "dev:web": "pnpm --filter @shorts-studio/frontend dev",
+    "prisma:generate": "node --env-file=.env scripts/run-prisma.mjs generate",
+    "prisma:migrate": "node --env-file=.env scripts/run-prisma.mjs migrate dev",
+    "prisma:deploy": "node --env-file=.env scripts/run-prisma.mjs migrate deploy",
+    "typecheck": "pnpm -r typecheck",
+    "lint": "pnpm -r lint",
+    "test": "pnpm -r test",
+    "build": "pnpm -r build"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "packageManager": "pnpm@9.15.0"
+}

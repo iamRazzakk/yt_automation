@@ -1,0 +1,23 @@
+FROM node:20-bookworm-slim
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ffmpeg python3 python3-venv python3-pip fontconfig \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+COPY package.json pnpm-workspace.yaml ./
+COPY backend/package.json backend/
+COPY frontend/package.json frontend/
+RUN corepack enable && pnpm install --filter @shorts-studio/backend...
+
+COPY backend backend
+COPY assets assets
+RUN cd backend && pnpm prisma generate \
+ && python3 -m venv /opt/venv \
+ && /opt/venv/bin/pip install --no-cache-dir faster-whisper numpy yt-dlp \
+ && fc-cache -f || true
+
+ENV PATH="/opt/venv/bin:$PATH"
+ENV STORAGE_ROOT=/data
+WORKDIR /app/backend
+CMD ["node", "--import", "tsx", "src/entry-api.ts"]

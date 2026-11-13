@@ -1,0 +1,19 @@
+FROM node:20-bookworm-slim AS build
+WORKDIR /app
+COPY package.json pnpm-workspace.yaml ./
+COPY frontend/package.json frontend/
+RUN corepack enable && pnpm install --filter @shorts-studio/frontend...
+COPY frontend frontend
+ARG API_URL=http://server-api:4000
+ENV API_URL=$API_URL
+RUN pnpm --filter @shorts-studio/frontend build
+
+FROM node:20-bookworm-slim
+WORKDIR /app
+COPY --from=build /app/frontend/.next ./.next
+COPY --from=build /app/frontend/package.json ./
+COPY --from=build /app/node_modules ./node_modules
+COPY --from=build /app/frontend/public ./public
+ENV NODE_ENV=production
+EXPOSE 3000
+CMD ["npx", "next", "start", "-p", "3000"]

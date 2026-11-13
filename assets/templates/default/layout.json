@@ -1,0 +1,27 @@
+{
+  "id": "default",
+  "canvas": { "width": 1080, "height": 1920 },
+  "background": { "type": "color", "color": "#000000" },
+  "slot": { "x": 24, "y": 250, "width": 1032, "height": 1240, "fit": "cover" },
+  "overlay": "overlay.png",
+  "caption": {
+    "font": "Inter",
+    "fontSize": 56,
+    "bold": true,
+    "primaryColor": "#FFFFFF",
+    "outlineColor": "#000000",
+    "outline": 4,
+    "x": 540,
+    "y": 1680,
+    "alignment": 2,
+    "maxCharsPerLine": 28,
+    "maxLines": 2,
+    "wordsPerChunk": 4
+  },
+  "thumbnail": {
+    "width": 1080,
+    "height": 1920,
+    "overlay": "thumb_overlay.png",
+    "titleBox": { "x": 60, "y": 1560, "width": 960, "height": 280, "fontSize": 64 }
+  }
+}
