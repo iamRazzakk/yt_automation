@@ -6,6 +6,7 @@ import { loadConfig } from "../../infra/config.js";
 import { getDb } from "../../infra/db.js";
 import { assertDiskAllowsNewJobs } from "../../infra/disk.js";
 import { enqueueJob } from "../../infra/queues.js";
+import { getStorage } from "../../infra/storage/local.js";
 import { extractYoutubeId, normalizeYoutubeUrl } from "../../infra/ytdlp.js";
 
 const createBody = z.object({
@@ -214,12 +215,40 @@ export async function videoRoutes(app: FastifyInstance): Promise<void> {
         message: "Cannot delete while a clip is uploading",
       });
     }
-    const video = await db.video.findUnique({ where: { id } });
+    const video = await db.video.findUnique({
+      where: { id },
+      include: {
+        clips: { select: { id: true, videoKey: true, thumbKey: true } },
+      },
+    });
     if (!video) {
       return reply.status(404).send({
         error: { code: "NOT_FOUND", message: "Video not found" },
       });
     }
+
+    const cfg = loadConfig();
+    const storage = getStorage(cfg.STORAGE_ROOT);
+    const keys = new Set<string>();
+    if (video.originalKey) keys.add(video.originalKey);
+    if (video.audioKey) keys.add(video.audioKey);
+    for (const clip of video.clips) {
+      if (clip.videoKey) keys.add(clip.videoKey);
+      if (clip.thumbKey) keys.add(clip.thumbKey);
+    }
+    for (const key of keys) {
+      await storage.delete(key).catch(() => undefined);
+    }
+    // Wipe whole folders (covers renamed/legacy keys + tmp leftovers)
+    await storage.deletePrefix(`videos/${id}`).catch(() => undefined);
+    await storage.deletePrefix(`clips/${id}`).catch(() => undefined);
+    await storage.deletePrefix(`tmp/transcribe-${id}`).catch(() => undefined);
+    await storage.deletePrefix(`tmp/${id}`).catch(() => undefined);
+    await storage.deletePrefix(`tmp/download-${id}`).catch(() => undefined);
+    for (const clip of video.clips) {
+      await storage.deletePrefix(`tmp/render-${clip.id}`).catch(() => undefined);
+    }
+
     await db.video.delete({ where: { id } });
     return { ok: true };
   });
