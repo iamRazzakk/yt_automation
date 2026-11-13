@@ -18,9 +18,10 @@ services:
 
   redis:
     image: redis:7-alpine
+    # Host 6380 — avoids conflict with password-protected Redis on 6379
     command: ["redis-server", "--appendonly", "yes"]
     ports:
-      - "6379:6379"
+      - "6380:6379"
     volumes:
       - redisdata:/data
     healthcheck:

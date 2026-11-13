@@ -3,18 +3,18 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "node scripts/dev.mjs",
-    "dev:api": "pnpm --filter @shorts-studio/backend dev:api",
-    "dev:worker": "pnpm --filter @shorts-studio/backend dev:worker",
-    "dev:web": "pnpm --filter @shorts-studio/frontend dev",
-    "start": "node scripts/prod.mjs",
+    "dev": "node init && node scripts/dev.mjs",
+    "dev:api": "node init && pnpm --filter @shorts-studio/backend dev:api",
+    "dev:worker": "node init && pnpm --filter @shorts-studio/backend dev:worker",
+    "dev:web": "node init && pnpm --filter @shorts-studio/frontend dev",
+    "start": "node init && node scripts/prod.mjs",
     "prisma:generate": "node --env-file=.env scripts/run-prisma.mjs generate",
     "prisma:migrate": "node --env-file=.env scripts/run-prisma.mjs migrate dev",
     "prisma:deploy": "node --env-file=.env scripts/run-prisma.mjs migrate deploy",
     "typecheck": "pnpm -r typecheck",
     "lint": "pnpm -r lint",
     "test": "pnpm -r test",
-    "build": "pnpm --filter @shorts-studio/frontend build"
+    "build": "node init && pnpm --filter @shorts-studio/frontend build"
   },
   "engines": {
     "node": ">=20"
