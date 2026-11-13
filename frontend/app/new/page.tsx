@@ -45,8 +45,8 @@ export default function NewVideoPage() {
   }
 
   return (
-    <section className="max-w-xl">
-      <h1 className="font-display text-2xl font-semibold">New video</h1>
+    <section className="mx-auto max-w-xl">
+      <h1 className="font-display text-xl font-semibold sm:text-2xl">New video</h1>
       <p className="mt-1 text-sm text-mist">
         Free disk: {stats.data ? `${stats.data.disk.freeGb.toFixed(1)} GB` : "…"}
         {stats.data?.disk.blocked && (

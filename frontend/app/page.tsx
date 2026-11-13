@@ -2,8 +2,6 @@
 
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { StatusBadge } from "@/components/StatusBadge";
 import { api } from "@/lib/api";
 
@@ -16,34 +14,22 @@ const ACTIVE = new Set([
 ]);
 
 export default function VideosPage() {
-  const router = useRouter();
-  const me = useQuery({ queryKey: ["me"], queryFn: api.me });
-
-  useEffect(() => {
-    if (me.isSuccess && !me.data) router.replace("/login");
-  }, [me.isSuccess, me.data, router]);
-
   const videos = useQuery({
     queryKey: ["videos"],
     queryFn: api.videos,
-    enabled: me.data === true,
     refetchInterval: (q) => {
       const items = q.state.data?.items ?? [];
       return items.some((v) => ACTIVE.has(v.status)) ? 2000 : 15000;
     },
   });
 
-  if (me.isLoading || !me.data) {
-    return <p className="text-mist">Checking session…</p>;
-  }
-
   return (
     <section>
       <div className="mb-6 flex items-center justify-between gap-3">
-        <h1 className="font-display text-2xl font-semibold">Videos</h1>
+        <h1 className="font-display text-xl font-semibold sm:text-2xl">Videos</h1>
         <Link
           href="/new"
-          className="bg-accent px-4 py-2 text-sm font-medium text-ink no-underline"
+          className="shrink-0 bg-accent px-3 py-2 text-sm font-medium text-ink no-underline sm:px-4"
         >
           New video
         </Link>
@@ -59,9 +45,9 @@ export default function VideosPage() {
           <li key={v.id}>
             <Link
               href={`/videos/${v.id}`}
-              className="flex items-center justify-between gap-4 border border-line bg-panel/60 px-4 py-3 no-underline transition hover:border-accent/40"
+              className="flex flex-col gap-3 border border-line bg-panel/60 px-3 py-3 no-underline transition hover:border-accent/40 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:px-4"
             >
-              <div className="min-w-0">
+              <div className="min-w-0 flex-1">
                 <p className="truncate font-medium text-foam">
                   {v.title ?? "Untitled video"}
                 </p>
@@ -69,7 +55,7 @@ export default function VideosPage() {
                   {new Date(v.createdAt).toLocaleString()}
                 </p>
                 {ACTIVE.has(v.status) && (
-                  <div className="mt-2 h-1.5 w-48 overflow-hidden bg-line">
+                  <div className="mt-2 h-1.5 w-full max-w-xs overflow-hidden bg-line">
                     <div
                       className="h-full bg-accent transition-all"
                       style={{ width: `${v.progress}%` }}
@@ -80,7 +66,9 @@ export default function VideosPage() {
                   <p className="mt-1 truncate text-xs text-danger">{v.errorMessage}</p>
                 )}
               </div>
-              <StatusBadge status={v.status} />
+              <div className="self-start sm:self-center">
+                <StatusBadge status={v.status} />
+              </div>
             </Link>
           </li>
         ))}

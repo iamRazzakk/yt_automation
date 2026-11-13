@@ -57,8 +57,8 @@ export default function SettingsPage() {
   });
 
   return (
-    <section className="max-w-xl space-y-6">
-      <h1 className="font-display text-2xl font-semibold">Settings</h1>
+    <section className="mx-auto max-w-xl space-y-6">
+      <h1 className="font-display text-xl font-semibold sm:text-2xl">Settings</h1>
 
       <div className="border border-warn/30 bg-warn/10 px-4 py-3 text-sm text-warn">
         Uploads may be forced private until your Google Cloud API project is audited by

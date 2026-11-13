@@ -42,7 +42,7 @@ pnpm run dev
 
 To run one process alone: `pnpm dev:api` / `pnpm dev:worker` / `pnpm dev:web`.
 
-Default password: value of `ADMIN_PASSWORD` in `.env`.
+No admin login — the dashboard is open. Protect the host/network if exposed publicly.
 
 ## Tools required on the host
 

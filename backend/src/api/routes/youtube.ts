@@ -55,7 +55,7 @@ export async function youtubeRoutes(app: FastifyInstance): Promise<void> {
     reply.setCookie("oauth_state", `${state}|${stateToken}`, {
       httpOnly: true,
       sameSite: "lax",
-      secure: cfg.NODE_ENV === "production",
+      secure: cfg.APP_URL.startsWith("https://"),
       path: "/",
       maxAge: 600,
     });

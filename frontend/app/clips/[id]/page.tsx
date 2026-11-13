@@ -92,12 +92,12 @@ export default function ClipReviewPage() {
         : null;
 
   return (
-    <section className="grid gap-8 lg:grid-cols-[minmax(0,360px)_1fr]">
+    <section className="grid gap-6 md:gap-8 lg:grid-cols-[minmax(0,360px)_1fr]">
       <div>
         <Link href={`/videos/${c.videoId}`} className="text-sm text-mist no-underline">
           ← Back to video
         </Link>
-        <div className="mt-3 aspect-[9/16] overflow-hidden border border-line bg-black">
+        <div className="mx-auto mt-3 aspect-[9/16] max-h-[70vh] w-full max-w-sm overflow-hidden border border-line bg-black sm:max-w-none">
           {c.videoKey ? (
             <video
               key={c.id}
@@ -212,12 +212,12 @@ export default function ClipReviewPage() {
           </select>
         </label>
 
-        <div className="flex flex-wrap gap-2 pt-2">
+        <div className="flex flex-col gap-2 pt-2 sm:flex-row sm:flex-wrap">
           <button
             type="button"
             disabled={!canEdit || save.isPending}
             onClick={() => save.mutate()}
-            className="border border-line px-3 py-2 text-sm"
+            className="border border-line px-3 py-2.5 text-sm sm:py-2"
           >
             Save
           </button>
@@ -225,7 +225,7 @@ export default function ClipReviewPage() {
             type="button"
             disabled={!canEdit || regen.isPending}
             onClick={() => regen.mutate()}
-            className="border border-line px-3 py-2 text-sm"
+            className="border border-line px-3 py-2.5 text-sm sm:py-2"
           >
             Regenerate metadata
           </button>
@@ -234,7 +234,7 @@ export default function ClipReviewPage() {
             disabled={!canApprove || approve.isPending}
             title={approveReason ?? undefined}
             onClick={() => approve.mutate()}
-            className="bg-accent px-3 py-2 text-sm font-medium text-ink disabled:opacity-40"
+            className="bg-accent px-3 py-2.5 text-sm font-medium text-ink disabled:opacity-40 sm:py-2"
           >
             Approve & Publish
           </button>
@@ -242,7 +242,7 @@ export default function ClipReviewPage() {
             type="button"
             disabled={!canEdit || reject.isPending}
             onClick={() => reject.mutate()}
-            className="border border-danger/40 px-3 py-2 text-sm text-danger"
+            className="border border-danger/40 px-3 py-2.5 text-sm text-danger sm:py-2"
           >
             Reject
           </button>

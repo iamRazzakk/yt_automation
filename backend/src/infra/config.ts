@@ -34,7 +34,8 @@ function loadDotEnv(): void {
 const envSchema = z.object({
   API_PORT: z.coerce.number().int().positive().default(4000),
   APP_URL: z.string().url(),
-  ADMIN_PASSWORD: z.string().min(1),
+  /** Unused — login removed; kept optional for old .env files. */
+  ADMIN_PASSWORD: z.string().optional().default(""),
   SESSION_SECRET: z.string().min(32),
   TOKEN_ENCRYPTION_KEY: z
     .string()

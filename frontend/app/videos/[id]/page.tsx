@@ -127,7 +127,7 @@ export default function VideoDetailPage() {
 
       <div>
         <h2 className="mb-3 font-display text-lg">Clips</h2>
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {v.clips.map((c) => (
             <Link
               key={c.id}

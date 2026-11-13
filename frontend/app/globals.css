@@ -12,6 +12,17 @@ body {
     radial-gradient(ellipse 80% 50% at 10% -10%, rgba(61, 220, 151, 0.12), transparent),
     radial-gradient(ellipse 60% 40% at 90% 0%, rgba(80, 140, 255, 0.08), transparent),
     linear-gradient(180deg, #0b0f14 0%, #0e141c 100%);
+  /* Safe area for notched phones + bottom nav */
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+/* Prevent iOS zoom on form focus */
+@media (max-width: 640px) {
+  input,
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
 }
 
 a {
