@@ -39,8 +39,8 @@ export async function enqueueJob(
       state === "waiting" ||
       state === "delayed" ||
       state === "active" ||
-      state === "paused" ||
-      state === "waiting-children"
+      state === "waiting-children" ||
+      state === "prioritized"
     ) {
       return;
     }
