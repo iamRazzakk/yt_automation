@@ -4,9 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev:api": "tsx watch src/entry-api.ts",
-    "dev:worker": "tsx watch src/entry-worker.ts",
-    "build": "tsc -p tsconfig.build.json",
+    "dev:api": "node init && tsx watch src/entry-api.ts",
+    "dev:worker": "node init && tsx watch src/entry-worker.ts",
+    "build": "node init && tsc -p tsconfig.build.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "lint": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run",

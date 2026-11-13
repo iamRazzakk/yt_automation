@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -H 0.0.0.0 -p 9999",
-    "build": "next build",
-    "start": "next start -H 0.0.0.0 -p 9999",
+    "dev": "node init && next dev -H 0.0.0.0 -p 9999",
+    "build": "node init && next build",
+    "start": "node init && next start -H 0.0.0.0 -p 9999",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "lint": "next lint",
     "test": "echo \"no frontend unit tests yet\""

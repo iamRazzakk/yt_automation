@@ -1,8 +1,6 @@
 node_modules/
 dist/
 .next/
-.env
-.env.local
 *.log
 coverage/
 data/
@@ -11,3 +9,4 @@ tmp/
 *.tsbuildinfo
 backend/prisma/*.db
 backend/prisma/*.db-journal
+config.bat
